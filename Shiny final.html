@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Zilu Sun">
+
+<title>Shiny</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Shiny final_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Shiny final_files/libs/quarto-html/quarto.js"></script>
+<script src="Shiny final_files/libs/quarto-html/popper.min.js"></script>
+<script src="Shiny final_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Shiny final_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Shiny final_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Shiny final_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Shiny final_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Shiny final_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Shiny final_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Shiny</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zilu Sun </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong><em>Some parts of this assignment are referenced from GPT content.</em></strong></p>
+<p>1.1 Hadley_2 is more efficient than the first one because it includes a reactive expression.</p>
+<p>2.3.5.1 Which of textOutput() and verbatimTextOutput() should each of the following render functions be paired with?</p>
+<p>renderPrint(summary(mtcars)) —– verbatimTextOutput() renderText(“Good morning!”) —– textOutput() renderPrint(t.test(1:5, 2:6)) —– verbatimTextOutput() renderText(str(lm(mpg ~ wt, data = mtcars))) —–textOutput()</p>
+<p>2.3.5.2 Re-create the Shiny app from Section 2.3.3, this time setting height to 300px and width to 700px. Set the plot “alt” text so that a visually impaired user can tell that its a scatterplot of five random numbers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotOutput</span>(<span class="st">"plot"</span>, <span class="at">width =</span> <span class="st">"700px"</span>, <span class="at">height =</span> <span class="st">"300px"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>plot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>(<span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">res =</span> <span class="dv">96</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>2.3.5.3 Update the options in the call to renderDataTable() below so that the data is displayed, but all other controls are suppressed (i.e., remove the search, ordering, and filtering commands). You’ll need to read ?renderDataTable and review the options at https://datatables.net/reference/option/.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dataTableOutput</span>(<span class="st">"table"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`shiny::dataTableOutput()` is deprecated as of shiny 1.8.1.
+Please use `DT::DTOutput()` instead.
+Since you have a suitable version of DT (&gt;= v0.32.1), shiny::dataTableOutput() will automatically use DT::DTOutput() under-the-hood.
+If this happens to break your app, set `options(shiny.legacy.datatable = TRUE)` to get the legacy datatable implementation (or `FALSE` to squelch this message).
+See &lt;https://rstudio.github.io/DT/shiny.html&gt; for more information.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderDataTable</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    mtcars, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">searching =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">ordering =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">paging =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">pageLength =</span> <span class="dv">5</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app231707e6a6bcc6863377ff5f48c53707/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<p>2.3.5.4 Alternatively, read up on reactable, and convert the above app to use it instead.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reactableOutput</span>(<span class="st">"table"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>table <span class="ot">&lt;-</span> <span class="fu">renderReactable</span>({</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">reactable</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      mtcars,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">searchable =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">sortable =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">pagination =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">defaultPageSize =</span> <span class="dv">5</span> </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="appeae144086eee1b380001d656ffa2a271/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<p>3.3.6.1</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textInput</span>(<span class="st">"name"</span>, <span class="st">"What's your name?"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textOutput</span>(<span class="st">"greeting"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>server1 <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>greeting <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Hello "</span>, input<span class="sc">$</span>name)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app1b7943f389a9497017dca59fd46892dc/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textInput</span>(<span class="st">"name"</span>, <span class="st">"What's your name?"</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textOutput</span>(<span class="st">"greeting"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>server2 <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>greeting <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Hello "</span>, input<span class="sc">$</span>name)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app7bd51cf078d2fba30850199e9d36a9a7/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textInput</span>(<span class="st">"name"</span>, <span class="st">"What's your name?"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">textOutput</span>(<span class="st">"greeting"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>server3 <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>greeting <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Hello "</span>, input<span class="sc">$</span>name)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app400a7f72f6eb4a6e1403144f8816e7e3/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<p>3.3.6.2</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"igraph"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">"igraph"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>edges_server1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"input$a"</span>, <span class="st">"c"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$b"</span>, <span class="st">"c"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"c"</span>, <span class="st">"e"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$d"</span>, <span class="st">"e"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"e"</span>, <span class="st">"output$f"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>edges_server2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"input$x1"</span>, <span class="st">"x"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$x2"</span>, <span class="st">"x"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$x3"</span>, <span class="st">"x"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"x"</span>, <span class="st">"output$z"</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$y1"</span>, <span class="st">"y"</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$y2"</span>, <span class="st">"y"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"y"</span>, <span class="st">"output$z"</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>edges_server3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"input$a"</span>, <span class="st">"a"</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"a"</span>, <span class="st">"b"</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$b"</span>, <span class="st">"b"</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"b"</span>, <span class="st">"c"</span>,</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$c"</span>, <span class="st">"c"</span>,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"c"</span>, <span class="st">"d"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"input$d"</span>, <span class="st">"d"</span>)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>plot_reactive_graph <span class="ot">&lt;-</span> <span class="cf">function</span>(edges, title) {</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">graph</span>(edges, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(g,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">vertex.color =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">vertex.size =</span> <span class="dv">30</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">vertex.label.cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">edge.arrow.size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> title)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_reactive_graph</span>(edges_server1, <span class="st">"Reactive Graph - server1"</span>)</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_reactive_graph</span>(edges_server2, <span class="st">"Reactive Graph - server2"</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_reactive_graph</span>(edges_server3, <span class="st">"Reactive Graph - server3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Shiny-final_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>3.3.6.3 <code>var()</code> and <code>range()</code> are base R functions. If you define reactives with these names, they will overwrite the base functions, leading to conflicts or errors. For example, in <code>range(var(), na.rm = TRUE)</code>, the reactive <code>range()</code> will be called instead of the base R function <code>range()</code>, resulting in an error.</p>
+<p>4.8.1</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>edges_4_6 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"input$code"</span>, <span class="st">"selected"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), diag)"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), body_part)"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), location)"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"summary"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), diag)"</span>, <span class="st">"output$diag"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), body_part)"</span>, <span class="st">"output$body_part"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), location)"</span>, <span class="st">"output$location"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">"summary"</span>, <span class="st">"output$age_sex"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">"input$y"</span>, <span class="st">"output$age_sex"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>g_4_6 <span class="ot">&lt;-</span> <span class="fu">graph</span>(edges_4_6, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g_4_6,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.size =</span> <span class="dv">30</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge.arrow.size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Reactive Graph - 4.6 (Rate vs Count)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Shiny-final_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>edges_4_7 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"input$code"</span>, <span class="st">"selected"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), diag)"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), body_part)"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"count_top(selected(), location)"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"summary"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), diag)"</span>, <span class="st">"output$diag"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), body_part)"</span>, <span class="st">"output$body_part"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">"count_top(selected(), location)"</span>, <span class="st">"output$location"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>               <span class="st">"summary"</span>, <span class="st">"output$age_sex"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>               <span class="st">"input$y"</span>, <span class="st">"output$age_sex"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>               <span class="st">"input$story"</span>, <span class="st">"narrative_sample"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">"selected"</span>, <span class="st">"narrative_sample"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>               <span class="st">"narrative_sample"</span>, <span class="st">"output$narrative"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>g_4_7 <span class="ot">&lt;-</span> <span class="fu">graph</span>(edges_4_7, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g_4_7,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.size =</span> <span class="dv">30</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="fl">0.8</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge.arrow.size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Reactive Graph - 4.7 (Narrative)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Shiny-final_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>4.8.2 If you flip fct_infreq() and fct_lump():</p>
+<p>Original order (fct_lump() -&gt; fct_infreq()): First lumps rare levels together, then orders the remaining levels by frequency. Flipped order (fct_infreq() -&gt; fct_lump()): Orders all levels by frequency first, then lumps the less frequent ones together.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"neiss"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create("neiss"): 'neiss' already exists</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in dir.create("neiss"): 'neiss' already exists</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>download <span class="ot">&lt;-</span> <span class="cf">function</span>(name) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="st">"https://raw.github.com/hadley/mastering-shiny/main/neiss/"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(url, name), <span class="fu">paste0</span>(<span class="st">"neiss/"</span>, name), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"injuries.tsv.gz"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"population.tsv"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download</span>(<span class="st">"products.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>4.8.3</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vroom)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ lubridate::%--%()        masks igraph::%--%()
+✖ dplyr::as_data_frame()   masks tibble::as_data_frame(), igraph::as_data_frame()
+✖ readr::col_character()   masks vroom::col_character()
+✖ readr::col_date()        masks vroom::col_date()
+✖ readr::col_datetime()    masks vroom::col_datetime()
+✖ readr::col_double()      masks vroom::col_double()
+✖ readr::col_factor()      masks vroom::col_factor()
+✖ readr::col_guess()       masks vroom::col_guess()
+✖ readr::col_integer()     masks vroom::col_integer()
+✖ readr::col_logical()     masks vroom::col_logical()
+✖ readr::col_number()      masks vroom::col_number()
+✖ readr::col_skip()        masks vroom::col_skip()
+✖ readr::col_time()        masks vroom::col_time()
+✖ readr::cols()            masks vroom::cols()
+✖ purrr::compose()         masks igraph::compose()
+✖ tidyr::crossing()        masks igraph::crossing()
+✖ readr::date_names_lang() masks vroom::date_names_lang()
+✖ readr::default_locale()  masks vroom::default_locale()
+✖ dplyr::filter()          masks stats::filter()
+✖ readr::fwf_cols()        masks vroom::fwf_cols()
+✖ readr::fwf_empty()       masks vroom::fwf_empty()
+✖ readr::fwf_positions()   masks vroom::fwf_positions()
+✖ readr::fwf_widths()      masks vroom::fwf_widths()
+✖ dplyr::lag()             masks stats::lag()
+✖ readr::locale()          masks vroom::locale()
+✖ readr::output_column()   masks vroom::output_column()
+✖ readr::problems()        masks vroom::problems()
+✖ purrr::simplify()        masks igraph::simplify()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forcats)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>injuries <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">"neiss/injuries.tsv.gz"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 255064 Columns: 10
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr  (6): sex, race, body_part, diag, location, narrative
+dbl  (3): age, prod_code, weight
+date (1): trmt_date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">"neiss/population.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 170 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): sex
+dbl (2): age, population
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>products <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="st">"neiss/products.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 38 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): title
+dbl (1): prod_code
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>prod_codes <span class="ot">&lt;-</span> <span class="fu">setNames</span>(products<span class="sc">$</span>prod_code, products<span class="sc">$</span>title)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>, </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"code"</span>, <span class="st">"Product"</span>, <span class="at">choices =</span> prod_codes)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>, </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">numericInput</span>(<span class="st">"num_rows"</span>, <span class="st">"Number of rows to display:"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">20</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"diag"</span>)),</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"body_part"</span>)),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"location"</span>))</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">12</span>, <span class="fu">plotOutput</span>(<span class="st">"age_sex"</span>))</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  selected <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    injuries <span class="sc">%&gt;%</span> <span class="fu">filter</span>(prod_code <span class="sc">==</span> input<span class="sc">$</span>code)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  count_top <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var, n) {</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    df <span class="sc">%&gt;%</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>({{ var }} <span class="sc">:</span><span class="er">=</span> <span class="fu">fct_lump</span>(<span class="fu">fct_infreq</span>({{ var }}), <span class="at">n =</span> n)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>({{ var }}) <span class="sc">%&gt;%</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">as.integer</span>(<span class="fu">sum</span>(weight))) <span class="sc">%&gt;%</span></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>diag <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), diag, input<span class="sc">$</span>num_rows)</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>body_part <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), body_part, input<span class="sc">$</span>num_rows)</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>location <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), location, input<span class="sc">$</span>num_rows)</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>  summary <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">selected</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>      <span class="fu">count</span>(age, sex, <span class="at">wt =</span> weight) <span class="sc">%&gt;%</span></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">left_join</span>(population, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"sex"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">rate =</span> n <span class="sc">/</span> population <span class="sc">*</span> <span class="fl">1e4</span>)</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>age_sex <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(age, n, <span class="at">colour =</span> sex)) <span class="sc">+</span></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Estimated number of injuries"</span>)</span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">res =</span> <span class="dv">96</span>)</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app9afacdcfc6a7b8c333bc3e98b67cdd73/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+<p>4.8.4</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>, </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"code"</span>, <span class="st">"Product"</span>, <span class="at">choices =</span> prod_codes)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>, </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">numericInput</span>(<span class="st">"num_rows"</span>, <span class="st">"Number of rows to display:"</span>, <span class="at">value =</span> <span class="dv">5</span>, <span class="at">min =</span> <span class="dv">1</span>, <span class="at">max =</span> <span class="dv">20</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">12</span>, </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">actionButton</span>(<span class="st">"prev"</span>, <span class="st">"Previous"</span>), </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">actionButton</span>(<span class="st">"next_button"</span>, <span class="st">"Next"</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"diag"</span>)),</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"body_part"</span>)),</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">4</span>, <span class="fu">tableOutput</span>(<span class="st">"location"</span>))</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">12</span>, <span class="fu">plotOutput</span>(<span class="st">"age_sex"</span>))</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  current_row <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(<span class="dv">1</span>)</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  selected <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    injuries <span class="sc">%&gt;%</span> <span class="fu">filter</span>(prod_code <span class="sc">==</span> input<span class="sc">$</span>code)</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>  count_top <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var, n) {</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    df <span class="sc">%&gt;%</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>({{ var }} <span class="sc">:</span><span class="er">=</span> <span class="fu">fct_lump</span>(<span class="fu">fct_infreq</span>({{ var }}), <span class="at">n =</span> n)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>({{ var }}) <span class="sc">%&gt;%</span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">as.integer</span>(<span class="fu">sum</span>(weight))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>diag <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), diag, input<span class="sc">$</span>num_rows)</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>body_part <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), body_part, input<span class="sc">$</span>num_rows)</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>location <span class="ot">&lt;-</span> <span class="fu">renderTable</span>({</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count_top</span>(<span class="fu">selected</span>(), location, input<span class="sc">$</span>num_rows)</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">width =</span> <span class="st">"100%"</span>)</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>  summary <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">selected</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>      <span class="fu">count</span>(age, sex, <span class="at">wt =</span> weight) <span class="sc">%&gt;%</span></span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">left_join</span>(population, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"sex"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">rate =</span> n <span class="sc">/</span> population <span class="sc">*</span> <span class="fl">1e4</span>)</span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>age_sex <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb28-55"><a href="#cb28-55" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(age, n, <span class="at">colour =</span> sex)) <span class="sc">+</span></span>
+<span id="cb28-56"><a href="#cb28-56" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb28-57"><a href="#cb28-57" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Estimated number of injuries"</span>)</span>
+<span id="cb28-58"><a href="#cb28-58" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">res =</span> <span class="dv">96</span>)</span>
+<span id="cb28-59"><a href="#cb28-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>next_button, {</span>
+<span id="cb28-60"><a href="#cb28-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">current_row</span>(<span class="fu">min</span>(<span class="fu">current_row</span>() <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">nrow</span>(<span class="fu">selected</span>())))</span>
+<span id="cb28-61"><a href="#cb28-61" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb28-62"><a href="#cb28-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>prev, {</span>
+<span id="cb28-63"><a href="#cb28-63" aria-hidden="true" tabindex="-1"></a>    <span class="fu">current_row</span>(<span class="fu">max</span>(<span class="fu">current_row</span>() <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb28-64"><a href="#cb28-64" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb28-65"><a href="#cb28-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observe</span>({</span>
+<span id="cb28-66"><a href="#cb28-66" aria-hidden="true" tabindex="-1"></a>    row_data <span class="ot">&lt;-</span> <span class="fu">selected</span>()[<span class="fu">current_row</span>(), ]</span>
+<span id="cb28-67"><a href="#cb28-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(row_data) </span>
+<span id="cb28-68"><a href="#cb28-68" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb28-69"><a href="#cb28-69" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><iframe data-deferred-src="app0b63fafcb393f8b75dd8a3abb88c646e/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe></p>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,374 @@
+---
+title: "Shiny"
+author: "Zilu Sun"
+format: html
+editor: visual
+runtime: shiny
+output: html_document
+---
+
+***Some parts of this assignment are referenced from GPT content.***
+
+1.1
+Hadley_2 is more efficient than the first one because it includes a reactive expression.
+
+
+2.3.5.1 Which of textOutput() and verbatimTextOutput() should each of the following render functions be paired with?
+
+renderPrint(summary(mtcars)) -----	verbatimTextOutput()
+renderText("Good morning!") -----	textOutput()
+renderPrint(t.test(1:5, 2:6)) -----	verbatimTextOutput()
+renderText(str(lm(mpg ~ wt, data = mtcars))) -----textOutput()
+
+
+2.3.5.2 Re-create the Shiny app from Section 2.3.3, this time setting height to 300px and width to 700px. Set the plot “alt” text so that a visually impaired user can tell that its a scatterplot of five random numbers.
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  plotOutput("plot", width = "700px", height = "300px")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot(plot(1:5), res = 96)
+}
+```
+
+2.3.5.3 Update the options in the call to renderDataTable() below so that the data is displayed, but all other controls are suppressed (i.e., remove the search, ordering, and filtering commands). You’ll need to read ?renderDataTable and review the options at https://datatables.net/reference/option/.
+```{r}
+ui <- fluidPage(
+  dataTableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$table <- renderDataTable(
+    mtcars, 
+    options = list(
+      searching = FALSE,
+      ordering = FALSE, 
+      paging = TRUE,
+      pageLength = 5
+    )
+  )
+}
+
+shinyApp(ui, server)
+
+```
+
+
+2.3.5.4 Alternatively, read up on reactable, and convert the above app to use it instead.
+```{r}
+library(shiny)
+library(reactable)
+
+ui <- fluidPage(
+  reactableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$table <- renderReactable({
+    reactable(
+      mtcars,
+      searchable = FALSE,
+      sortable = FALSE, 
+      pagination = TRUE,
+      defaultPageSize = 5 
+    )
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+3.3.6.1
+```{r}
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server1 <- function(input, output, session) {
+  output$greeting <- renderText({
+    paste0("Hello ", input$name)
+  })
+}
+
+shinyApp(ui, server1)
+```
+```{r}
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server2 <- function(input, output, session) {
+  output$greeting <- renderText({
+    paste0("Hello ", input$name)
+  })
+}
+
+shinyApp(ui, server2)
+
+```
+
+```{r}
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server3 <- function(input, output, session) {
+  output$greeting <- renderText({
+    paste0("Hello ", input$name)
+  })
+}
+
+shinyApp(ui, server3)
+
+```
+3.3.6.2
+```{r}
+if (!requireNamespace("igraph", quietly = TRUE)) install.packages("igraph")
+library(igraph)
+edges_server1 <- c("input$a", "c",
+                   "input$b", "c",
+                   "c", "e",
+                   "input$d", "e",
+                   "e", "output$f")
+
+edges_server2 <- c("input$x1", "x",
+                   "input$x2", "x",
+                   "input$x3", "x",
+                   "x", "output$z",
+                   "input$y1", "y",
+                   "input$y2", "y",
+                   "y", "output$z")
+
+edges_server3 <- c("input$a", "a",
+                   "a", "b",
+                   "input$b", "b",
+                   "b", "c",
+                   "input$c", "c",
+                   "c", "d",
+                   "input$d", "d")
+plot_reactive_graph <- function(edges, title) {
+  g <- graph(edges, directed = TRUE)
+  plot(g,
+       vertex.color = "lightblue",
+       vertex.size = 30,
+       vertex.label.cex = 0.8,
+       edge.arrow.size = 0.5,
+       main = title)
+}
+par(mfrow = c(1, 3))
+plot_reactive_graph(edges_server1, "Reactive Graph - server1")
+plot_reactive_graph(edges_server2, "Reactive Graph - server2")
+plot_reactive_graph(edges_server3, "Reactive Graph - server3")
+
+```
+3.3.6.3
+`var()` and `range()` are base R functions. If you define reactives with these names, they will overwrite the base functions, leading to conflicts or errors. For example, in `range(var(), na.rm = TRUE)`, the reactive `range()` will be called instead of the base R function `range()`, resulting in an error.
+
+4.8.1
+```{r}
+edges_4_6 <- c("input$code", "selected",
+               "selected", "count_top(selected(), diag)",
+               "selected", "count_top(selected(), body_part)",
+               "selected", "count_top(selected(), location)",
+               "selected", "summary",
+               "count_top(selected(), diag)", "output$diag",
+               "count_top(selected(), body_part)", "output$body_part",
+               "count_top(selected(), location)", "output$location",
+               "summary", "output$age_sex",
+               "input$y", "output$age_sex")
+
+g_4_6 <- graph(edges_4_6, directed = TRUE)
+plot(g_4_6,
+     vertex.color = "lightblue",
+     vertex.size = 30,
+     vertex.label.cex = 0.8,
+     edge.arrow.size = 0.5,
+     main = "Reactive Graph - 4.6 (Rate vs Count)")
+```
+```{r}
+edges_4_7 <- c("input$code", "selected",
+               "selected", "count_top(selected(), diag)",
+               "selected", "count_top(selected(), body_part)",
+               "selected", "count_top(selected(), location)",
+               "selected", "summary",
+               "count_top(selected(), diag)", "output$diag",
+               "count_top(selected(), body_part)", "output$body_part",
+               "count_top(selected(), location)", "output$location",
+               "summary", "output$age_sex",
+               "input$y", "output$age_sex",
+               "input$story", "narrative_sample",
+               "selected", "narrative_sample",
+               "narrative_sample", "output$narrative")
+g_4_7 <- graph(edges_4_7, directed = TRUE)
+plot(g_4_7,
+     vertex.color = "lightblue",
+     vertex.size = 30,
+     vertex.label.cex = 0.8,
+     edge.arrow.size = 0.5,
+     main = "Reactive Graph - 4.7 (Narrative)")
+
+```
+4.8.2
+If you flip fct_infreq() and fct_lump():
+
+Original order (fct_lump() -> fct_infreq()): First lumps rare levels together, then orders the remaining levels by frequency.
+Flipped order (fct_infreq() -> fct_lump()): Orders all levels by frequency first, then lumps the less frequent ones together.
+
+```{r}
+dir.create("neiss")
+#> Warning in dir.create("neiss"): 'neiss' already exists
+download <- function(name) {
+  url <- "https://raw.github.com/hadley/mastering-shiny/main/neiss/"
+  download.file(paste0(url, name), paste0("neiss/", name), quiet = TRUE)
+}
+download("injuries.tsv.gz")
+download("population.tsv")
+download("products.tsv")
+```
+
+4.8.3
+```{r}
+library(vroom)
+library(tidyverse)
+library(forcats)
+injuries <- vroom::vroom("neiss/injuries.tsv.gz")
+population <- vroom::vroom("neiss/population.tsv")
+products <- vroom::vroom("neiss/products.tsv")
+
+prod_codes <- setNames(products$prod_code, products$title)
+ui <- fluidPage(
+  fluidRow(
+    column(6, 
+      selectInput("code", "Product", choices = prod_codes)
+    ),
+    column(6, 
+      numericInput("num_rows", "Number of rows to display:", value = 5, min = 1, max = 20)
+    )
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")),
+    column(4, tableOutput("body_part")),
+    column(4, tableOutput("location"))
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  )
+)
+server <- function(input, output, session) {
+  selected <- reactive({
+    injuries %>% filter(prod_code == input$code)
+  })
+  count_top <- function(df, var, n) {
+    df %>%
+      mutate({{ var }} := fct_lump(fct_infreq({{ var }}), n = n)) %>%
+      group_by({{ var }}) %>%
+      summarise(n = as.integer(sum(weight))) %>%
+      arrange(desc(n))
+  }
+  output$diag <- renderTable({
+    count_top(selected(), diag, input$num_rows)
+  }, width = "100%")
+  
+  output$body_part <- renderTable({
+    count_top(selected(), body_part, input$num_rows)
+  }, width = "100%")
+  
+  output$location <- renderTable({
+    count_top(selected(), location, input$num_rows)
+  }, width = "100%")
+  summary <- reactive({
+    selected() %>%
+      count(age, sex, wt = weight) %>%
+      left_join(population, by = c("age", "sex")) %>%
+      mutate(rate = n / population * 1e4)
+  })
+  output$age_sex <- renderPlot({
+    summary() %>%
+      ggplot(aes(age, n, colour = sex)) +
+      geom_line() +
+      labs(y = "Estimated number of injuries")
+  }, res = 96)
+}
+shinyApp(ui, server)
+```
+
+4.8.4
+```{r}
+ui <- fluidPage(
+  fluidRow(
+    column(6, 
+      selectInput("code", "Product", choices = prod_codes)
+    ),
+    column(6, 
+      numericInput("num_rows", "Number of rows to display:", value = 5, min = 1, max = 20)
+    )
+  ),
+  fluidRow(
+    column(12, 
+      actionButton("prev", "Previous"), 
+      actionButton("next_button", "Next")
+    )
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")),
+    column(4, tableOutput("body_part")),
+    column(4, tableOutput("location"))
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  )
+)
+
+server <- function(input, output, session) {
+  current_row <- reactiveVal(1)
+  selected <- reactive({
+    injuries %>% filter(prod_code == input$code)
+  })
+  count_top <- function(df, var, n) {
+    df %>%
+      mutate({{ var }} := fct_lump(fct_infreq({{ var }}), n = n)) %>%
+      group_by({{ var }}) %>%
+      summarise(n = as.integer(sum(weight))) %>%
+      arrange(desc(n))
+  }
+  output$diag <- renderTable({
+    count_top(selected(), diag, input$num_rows)
+  }, width = "100%")
+  output$body_part <- renderTable({
+    count_top(selected(), body_part, input$num_rows)
+  }, width = "100%")
+  output$location <- renderTable({
+    count_top(selected(), location, input$num_rows)
+  }, width = "100%")
+  summary <- reactive({
+    selected() %>%
+      count(age, sex, wt = weight) %>%
+      left_join(population, by = c("age", "sex")) %>%
+      mutate(rate = n / population * 1e4)
+  })
+  output$age_sex <- renderPlot({
+    summary() %>%
+      ggplot(aes(age, n, colour = sex)) +
+      geom_line() +
+      labs(y = "Estimated number of injuries")
+  }, res = 96)
+  observeEvent(input$next_button, {
+    current_row(min(current_row() + 1, nrow(selected())))
+  })
+  observeEvent(input$prev, {
+    current_row(max(current_row() - 1, 1))
+  })
+  observe({
+    row_data <- selected()[current_row(), ]
+    print(row_data) 
+  })
+}
+shinyApp(ui, server)
+```
+
